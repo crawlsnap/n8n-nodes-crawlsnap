@@ -1,5 +1,5 @@
 {
-  "name": "@crawlsnap/n8n-nodes-crawlsnap",
+  "name": "n8n-nodes-crawlsnap",
   "version": "0.1.0",
   "description": "n8n community node for CrawlSnap — structured, on-demand data intelligence APIs (VectorSnap, PulseSnap, SubdoSnap).",
   "keywords": [
@@ -24,9 +24,6 @@
     "node": ">=20.15"
   },
   "main": "index.js",
-  "publishConfig": {
-    "access": "public"
-  },
   "scripts": {
     "build": "npx rimraf dist && tsc && gulp build:icons",
     "dev": "tsc --watch",
