@@ -1,0 +1,33 @@
+name: release
+
+# Build and publish to npm when a GitHub Release is published.
+# Uses npm Trusted Publishing (OIDC) — no long-lived npm token stored in the
+# repo. Configure the trusted publisher for the `n8n-nodes-crawlsnap` package on
+# npmjs.com (Settings → Trusted Publisher → this repo + this workflow file).
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # required for npm provenance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+      # Trusted Publishing (OIDC) requires npm >= 11.5.1; upgrade before publish.
+      - run: npm install -g npm@latest
+      - run: npm ci
+      - run: npm run lint
+      # `prepublishOnly` runs the full build (tsc + gulp icons) and the
+      # prepublish lint, so publish gates on a clean compiled dist/.
+      # No NODE_AUTH_TOKEN: auth is the OIDC token exchange (id-token: write).
+      - run: npm publish --provenance --access public

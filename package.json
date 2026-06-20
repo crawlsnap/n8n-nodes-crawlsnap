@@ -20,6 +20,10 @@
     "type": "git",
     "url": "git+https://github.com/crawlsnap/n8n-nodes-crawlsnap.git"
   },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "engines": {
     "node": ">=20.15"
   },
