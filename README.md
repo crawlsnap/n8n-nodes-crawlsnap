@@ -26,7 +26,7 @@ Follow the
 in the n8n documentation.
 
 In short: **Settings → Community Nodes → Install**, then enter
-`n8n-nodes-crawlsnap`.
+`@crawlsnap/n8n-nodes-crawlsnap`.
 
 ## Credentials
 
