@@ -1,0 +1,16 @@
+.github
+.vscode
+.idea
+
+# source — only the compiled dist is published
+nodes
+credentials
+tsconfig.json
+gulpfile.js
+.eslintrc.js
+.eslintrc.prepublish.js
+.prettierrc.js
+
+*.tsbuildinfo
+.DS_Store
+.env
