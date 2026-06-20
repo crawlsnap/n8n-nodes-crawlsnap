@@ -1,6 +1,6 @@
 {
   "name": "n8n-nodes-crawlsnap",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "n8n community node for CrawlSnap — structured, on-demand data intelligence APIs (VectorSnap, PulseSnap, SubdoSnap).",
   "keywords": [
     "n8n-community-node-package",
