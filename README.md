@@ -81,6 +81,12 @@ Requires n8n with `n8nNodesApiVersion` 1 (n8n 1.x). Tested on Node.js 20+.
 - [CrawlSnap website](https://crawlsnap.com)
 - [CrawlSnap API reference](https://api.crawlsnap.com)
 
+## Version history
+
+| Version | Changes                                                              |
+| ------- | ------------------------------------------------------------------- |
+| 0.1.0   | Initial release: VectorSnap, PulseSnap, and SubdoSnap operations.   |
+
 ## License
 
 [MIT](LICENSE.md)
