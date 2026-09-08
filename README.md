@@ -12,6 +12,8 @@ products as n8n operations:
 - **PulseSnap** — threat-intelligence pulse enrichment for a url, hash, IP, or
   domain.
 - **SubdoSnap** — paginated subdomain enumeration for a domain.
+- **SerpApi** — ranked Google search results for a query, with real target URLs
+  and related searches.
 
 [Installation](#installation) ·
 [Credentials](#credentials) ·
@@ -52,9 +54,11 @@ authenticates every request with `Authorization: Bearer <key>`.
 | PulseSnap  | Scan IP           | `GET /v1/pulse-snap/scan/ip`  |
 | PulseSnap  | Scan Domain       | `GET /v1/pulse-snap/scan/domain` |
 | SubdoSnap  | Scan Subdomains   | `GET /v1/subdo-snap/scan`     |
+| SerpApi    | Search            | `GET /v1/serp/search`         |
 
-Each operation takes a single **Query** (the indicator to look up). The node
-returns the unwrapped `data` payload of the CrawlSnap response envelope.
+Every indicator-lookup operation takes a single **Query** (the indicator to look
+up); **Search** takes a **Search Query** instead. The node returns the unwrapped
+`data` payload of the CrawlSnap response envelope.
 
 ### Pagination (SubdoSnap)
 
@@ -62,12 +66,22 @@ returns the unwrapped `data` payload of the CrawlSnap response envelope.
 contains a non-empty `cursor`. Pass it back via the **Cursor** field to fetch
 the next page.
 
+### Search refinements (SerpApi)
+
+`Search` returns one result page of about ten results. **Additional Fields**
+carries the refinements: Count, Page, Language, Country, Safe Search, Time
+Range, Site and File Type. To go further into the results raise **Page** —
+**Count** only caps what is returned from the page you asked for. Each result's
+`url` is the real target URL, never a search-engine redirector.
+
 ## Usage
 
 1. Add a **CrawlSnap** node to your workflow.
-2. Select a **Resource** (VectorSnap / PulseSnap / SubdoSnap) and **Operation**.
-3. Enter the **Query** — a URL, file hash, IPv4 address, or domain.
-4. Run. The node outputs the typed enrichment data.
+2. Select a **Resource** (VectorSnap / PulseSnap / SubdoSnap / SerpApi) and
+   **Operation**.
+3. Enter the **Query** — a URL, file hash, IPv4 address, or domain — or, for
+   SerpApi, the **Search Query**.
+4. Run. The node outputs the typed payload.
 
 The node is also usable as a tool by the n8n AI Agent node.
 

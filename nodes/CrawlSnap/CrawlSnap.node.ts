@@ -8,7 +8,7 @@ export class CrawlSnap implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Query CrawlSnap data intelligence APIs (VectorSnap, PulseSnap, SubdoSnap)',
+		description: 'Query CrawlSnap data intelligence APIs (VectorSnap, PulseSnap, SubdoSnap, SerpApi)',
 		defaults: {
 			name: 'CrawlSnap',
 		},
@@ -51,6 +51,11 @@ export class CrawlSnap implements INodeType {
 						name: 'SubdoSnap',
 						value: 'subdoSnap',
 						description: 'Paginated subdomain enumeration for a domain',
+					},
+					{
+						name: 'SerpApi',
+						value: 'serpApi',
+						description: 'Ranked Google search results for a query',
 					},
 				],
 				default: 'vectorSnap',
@@ -195,13 +200,43 @@ export class CrawlSnap implements INodeType {
 			},
 
 			// ----------------------------------------------------------------
-			// Query (shared by every operation)
+			// SerpApi operations
+			// ----------------------------------------------------------------
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: { resource: ['serpApi'] },
+				},
+				options: [
+					{
+						name: 'Search',
+						value: 'search',
+						action: 'Search the web',
+						description:
+							'Ranked Google results for a query, with real target URLs and related searches',
+						routing: {
+							request: { method: 'GET', url: '/v1/serp/search' },
+							output: { postReceive: [{ type: 'rootProperty', properties: { property: 'data' } }] },
+						},
+					},
+				],
+				default: 'search',
+			},
+
+			// ----------------------------------------------------------------
+			// Query (shared by the indicator-lookup resources)
 			// ----------------------------------------------------------------
 			{
 				displayName: 'Query',
 				name: 'query',
 				type: 'string',
 				required: true,
+				displayOptions: {
+					show: { resource: ['vectorSnap', 'pulseSnap', 'subdoSnap'] },
+				},
 				default: '',
 				placeholder: 'e.g. https://example.com, 8.8.8.8, example.com, or a file hash',
 				description:
@@ -231,6 +266,116 @@ export class CrawlSnap implements INodeType {
 						qs: { cursor: '={{$value || undefined}}' },
 					},
 				},
+			},
+
+			// ----------------------------------------------------------------
+			// SerpApi search query + refinements
+			// ----------------------------------------------------------------
+			{
+				displayName: 'Search Query',
+				name: 'searchQuery',
+				type: 'string',
+				required: true,
+				default: '',
+				placeholder: 'e.g. threat intelligence api',
+				displayOptions: {
+					show: { resource: ['serpApi'], operation: ['search'] },
+				},
+				description: 'The search query, exactly as you would type it into Google',
+				routing: {
+					request: {
+						qs: { q: '={{$value}}' },
+					},
+				},
+			},
+			{
+				displayName: 'Additional Fields',
+				name: 'additionalFields',
+				type: 'collection',
+				placeholder: 'Add Field',
+				default: {},
+				displayOptions: {
+					show: { resource: ['serpApi'], operation: ['search'] },
+				},
+				options: [
+					{
+						displayName: 'Count',
+						name: 'count',
+						type: 'number',
+						typeOptions: { minValue: 1, maxValue: 50 },
+						default: 10,
+						description:
+							'Max number of results to return. Caps the page you asked for; request the next page rather than a larger count.',
+						routing: { request: { qs: { count: '={{$value}}' } } },
+					},
+					{
+						displayName: 'Country',
+						name: 'country',
+						type: 'string',
+						default: '',
+						placeholder: 'us',
+						description: 'Country to bias results towards, as a two-letter code',
+						routing: { request: { qs: { country: '={{$value || undefined}}' } } },
+					},
+					{
+						displayName: 'File Type',
+						name: 'filetype',
+						type: 'string',
+						default: '',
+						placeholder: 'pdf',
+						description: 'Restrict results to one file type',
+						routing: { request: { qs: { filetype: '={{$value || undefined}}' } } },
+					},
+					{
+						displayName: 'Language',
+						name: 'language',
+						type: 'string',
+						default: '',
+						placeholder: 'en',
+						description: 'Interface language as a two-letter code',
+						routing: { request: { qs: { language: '={{$value || undefined}}' } } },
+					},
+					{
+						displayName: 'Page',
+						name: 'page',
+						type: 'number',
+						typeOptions: { minValue: 1, maxValue: 10 },
+						default: 1,
+						description: 'Result page. Page 2 starts at result 11.',
+						routing: { request: { qs: { page: '={{$value}}' } } },
+					},
+					{
+						displayName: 'Safe Search',
+						name: 'safe',
+						type: 'boolean',
+						default: false,
+						description: 'Whether to enable SafeSearch filtering',
+						routing: { request: { qs: { safe: '={{$value}}' } } },
+					},
+					{
+						displayName: 'Site',
+						name: 'site',
+						type: 'string',
+						default: '',
+						placeholder: 'github.com',
+						description: 'Restrict results to a single domain, subdomains included',
+						routing: { request: { qs: { site: '={{$value || undefined}}' } } },
+					},
+					{
+						displayName: 'Time Range',
+						name: 'timeRange',
+						type: 'options',
+						options: [
+							{ name: 'Day', value: 'day' },
+							{ name: 'Month', value: 'month' },
+							{ name: 'Week', value: 'week' },
+							{ name: 'Year', value: 'year' },
+						],
+						default: 'month',
+						description: 'Restrict results by recency',
+						routing: { request: { qs: { time_range: '={{$value || undefined}}' } } },
+					},
+				],
 			},
 		],
 	};

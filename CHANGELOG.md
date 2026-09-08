@@ -15,6 +15,26 @@ Releases before 0.1.1 are not listed here; see the
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-08
+
+API: CrawlSnap public API `v1`
+
+### Added
+
+- **SerpApi** resource with a **Search** operation (`GET /v1/serp/search`):
+  ranked Google results for a query, with real target URLs already unwrapped
+  from Google's redirector, plus the related searches Google suggests.
+  Takes a **Search Query**, and an **Additional Fields** collection carrying
+  Count, Page, Language, Country, Safe Search, Time Range, Site and File Type.
+  One call returns one result page, so raise Page rather than Count — Count only
+  caps what is returned from the page you asked for.
+
+### Changed
+
+- The shared **Query** field is now scoped to VectorSnap / PulseSnap /
+  SubdoSnap. SerpApi has its own **Search Query** field because the API takes
+  `q`, not `query`.
+
 ## [0.1.1] - 2026-06-20
 
 API: CrawlSnap public API `v1`
