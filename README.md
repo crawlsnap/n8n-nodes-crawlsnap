@@ -83,9 +83,15 @@ Requires n8n with `n8nNodesApiVersion` 1 (n8n 1.x). Tested on Node.js 20+.
 
 ## Version history
 
-| Version | Changes                                                              |
-| ------- | ------------------------------------------------------------------- |
-| 0.1.0   | Initial release: VectorSnap, PulseSnap, and SubdoSnap operations.   |
+| Version | Changes                                                                |
+| ------- | ---------------------------------------------------------------------- |
+| 0.1.1   | Build fix: `dist/` is always recompiled; publishing via npm OIDC.       |
+| 0.1.0   | Initial release: VectorSnap, PulseSnap, and SubdoSnap operations.       |
+
+Full release notes live in
+[CHANGELOG.md](https://github.com/crawlsnap/n8n-nodes-crawlsnap/blob/main/CHANGELOG.md)
+and on the
+[GitHub Releases](https://github.com/crawlsnap/n8n-nodes-crawlsnap/releases) page.
 
 ## License
 
